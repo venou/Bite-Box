@@ -22,9 +22,19 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "owner", "deliveryBoy"],
       required: true,
     },
+    restOtp: {
+      type: String,
+    },
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otpExpires: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);
-export default User;    
+export default User;

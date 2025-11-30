@@ -1,12 +1,70 @@
 import React, { useState } from "react";
 import { IoReturnUpBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../App";
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(2);
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const handleSendOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/send-otp`,
+        {
+          email,
+        },
+        { withCredentials: true }
+      );
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      setStep(2);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/verify-otp`,
+        {
+          email,
+          otp,
+        },
+        { withCredentials: true }
+      );
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      setStep(3);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (newPassword != confirmPassword) {
+      return null;
+    }
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/reset-password`,
+        {
+          email,
+          newPassword,
+        },
+        { withCredentials: true }
+      );
+      console.log(result);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[#fff5f2]">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200">
@@ -38,7 +96,7 @@ const ForgotPassword = () => {
             />
 
             <button
-              onClick={() => setStep(2)}
+              onClick={handleSendOtp}
               disabled={!email.trim()}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
@@ -68,7 +126,7 @@ const ForgotPassword = () => {
             />
 
             <button
-              onClick={() => setStep(2)}
+              onClick={handleVerifyOtp}
               disabled={!otp.trim()}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
@@ -84,21 +142,30 @@ const ForgotPassword = () => {
         )}
 
         {/* Step 3: Confirm Password */}
-        {step === 2 && (
+        {step === 3 && (
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
-              OTP
+              New Password
             </label>
             <input
               type="text"
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#ff4d2d]"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
-
+            <label className="block text-gray-700 font-semibold mb-1">
+              Confirm New Password
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#ff4d2d]"
+              placeholder="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
             <button
-              onClick={() => setStep(2)}
+              onClick={handleResetPassword}
               disabled={!otp.trim()}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
@@ -108,7 +175,7 @@ const ForgotPassword = () => {
                 }
               `}
             >
-              Verify
+              Reset Password
             </button>
           </div>
         )}
