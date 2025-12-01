@@ -23,9 +23,9 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setStep(2);
     } catch (error) {
       console.log(error);
-      setStep(2);
     }
   };
 
@@ -40,9 +40,9 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setStep(3);
     } catch (error) {
       console.log(error);
-      setStep(3);
     }
   };
 
