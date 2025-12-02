@@ -135,13 +135,14 @@ export const resetPassword = async (req, res) => {
 
 export const googleAuth = async (req, res) => {
   try {
-    const { fullName, email, mobile } = req.body;
-    const user = await User.findOne({ email });
+    const { fullName, email, mobile, role } = req.body;
+    let user = await User.findOne({ email });
     if (!user) {
       user = await User.create({
         fullName,
         email,
         mobile,
+        role,
       });
     }
     const token = await genToken(user._id);
