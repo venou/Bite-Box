@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
-
+import { ClipLoader } from "react-spinners";
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -13,8 +13,10 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSendOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/send-otp`,
@@ -26,12 +28,15 @@ const ForgotPassword = () => {
       console.log(result);
       setErr("");
       setStep(2);
+      setLoading(false);
     } catch (error) {
       setErr(error.response?.data.message);
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-otp`,
@@ -44,8 +49,10 @@ const ForgotPassword = () => {
       console.log(result);
       setErr("");
       setStep(3);
+      setLoading(false);
     } catch (error) {
       setErr(error.response?.data.message);
+      setLoading(false);
     }
   };
 
@@ -54,6 +61,7 @@ const ForgotPassword = () => {
       return null;
     }
     try {
+      setLoading(true);
       const result = await axios.post(
         `${serverUrl}/api/auth/reset-password`,
         {
@@ -64,9 +72,11 @@ const ForgotPassword = () => {
       );
       console.log(result);
       setErr("");
+      setLoading(false);
       navigate("/signin");
     } catch (error) {
       setErr(error.response?.data.message);
+      setLoading(false);
     }
   };
   return (
@@ -103,7 +113,7 @@ const ForgotPassword = () => {
 
             <button
               onClick={handleSendOtp}
-              disabled={!email.trim()}
+              disabled={!email.trim() || loading}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
                   email.trim()
@@ -112,7 +122,7 @@ const ForgotPassword = () => {
                 }
               `}
             >
-              Send OTP
+              {loading ? <ClipLoader size={22} color="white" /> : "Send OTP"}
             </button>
           </div>
         )}
@@ -135,7 +145,7 @@ const ForgotPassword = () => {
 
             <button
               onClick={handleVerifyOtp}
-              disabled={!otp.trim()}
+              disabled={!otp.trim() || loading}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
                   otp.trim()
@@ -144,7 +154,7 @@ const ForgotPassword = () => {
                 }
               `}
             >
-              Verify
+              {loading ? <ClipLoader size={22} color="white" /> : "Verify"}
             </button>
           </div>
         )}
@@ -178,7 +188,7 @@ const ForgotPassword = () => {
 
             <button
               onClick={handleResetPassword}
-              disabled={!otp.trim()}
+              disabled={!otp.trim() || loading}
               className={`w-full mt-5 py-3 cursor-pointer rounded-lg text-white font-semibold transition-all
                 ${
                   otp.trim()
@@ -187,7 +197,11 @@ const ForgotPassword = () => {
                 }
               `}
             >
-              Reset Password
+              {loading ? (
+                <ClipLoader size={22} color="white" />
+              ) : (
+                "Reset Password"
+              )}
             </button>
           </div>
         )}

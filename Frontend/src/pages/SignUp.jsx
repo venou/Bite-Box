@@ -7,6 +7,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
+import { ClipLoader } from "react-spinners";
 const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,9 +15,10 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [err, setErr] = useState("");
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("user");
   const handleSignUp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signup`,
@@ -31,8 +33,10 @@ const SignUp = () => {
       );
       console.log(result);
       setErr("");
+      setLoading(false);
     } catch (error) {
       setErr(error.response?.data.message);
+      setLoading(false);
     }
   };
 
@@ -161,7 +165,7 @@ const SignUp = () => {
           className="w-full bg-[#ff4d2d] text-white py-3 cursor-pointer rounded-lg font-semibold hover:bg-[#e64323] transition active:scale-[.98] shadow-md"
           onClick={handleSignUp}
         >
-          Sign Up
+          {loading ? <ClipLoader size={22} color="white" /> : "Sign Up"}
         </button>
         {err && <p className="text-center text-red-500 my-2.5">* {err}</p>}
         {/* Google */}
@@ -169,6 +173,7 @@ const SignUp = () => {
           type="button"
           className="w-full mt-4 flex items-center cursor-pointer justify-center gap-2 border border-gray-300 rounded-lg py-2.5 hover:bg-gray-100 transition"
           onClick={handleGoogleAuth}
+          disabled={loading}
         >
           <FcGoogle size={22} />
           <span className="font-medium">Sign up with Google</span>
