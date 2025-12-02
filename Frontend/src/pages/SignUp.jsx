@@ -13,6 +13,8 @@ const SignUp = () => {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState()
   const [role, setRole] = useState("user");
   const handleSignUp = async () => {
     try {
@@ -28,18 +30,33 @@ const SignUp = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
     } catch (error) {
-      console.log(error.response?.data);
+      setErr(error.response?.data.message);
     }
   };
 
   const handleGoogleAuth = async () => {
     if (!mobile) {
-      alert("Mobile no. is required");
+      return setErr("Mobile no. is required");
     }
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
-    console.log(result);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        {
+          fullName: result.user.displayName,
+          email: result.user.email,
+          role,
+          mobile,
+        },
+        { withCredentials: true }
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[#fff5f2]">
@@ -62,6 +79,7 @@ const SignUp = () => {
             placeholder="Enter your Fullname"
             onChange={(e) => setFullName(e.target.value)}
             value={fullName}
+            required
           />
         </div>
 
@@ -76,6 +94,7 @@ const SignUp = () => {
             placeholder="Enter your Email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            required
           />
         </div>
 
@@ -90,6 +109,7 @@ const SignUp = () => {
             placeholder="Enter your Mobile Number"
             onChange={(e) => setMobile(e.target.value)}
             value={mobile}
+            required
           />
         </div>
 
@@ -105,6 +125,7 @@ const SignUp = () => {
               placeholder="Enter your Password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              required
             />
             <button
               className="absolute right-3 top-3 text-gray-500 text-lg"
@@ -142,7 +163,7 @@ const SignUp = () => {
         >
           Sign Up
         </button>
-
+        {err && <p className="text-center text-red-500 my-2.5">* {err}</p>}
         {/* Google */}
         <button
           type="button"

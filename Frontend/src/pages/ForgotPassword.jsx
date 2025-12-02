@@ -12,6 +12,7 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [err, setErr] = useState("");
 
   const handleSendOtp = async () => {
     try {
@@ -23,9 +24,10 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
       setStep(2);
     } catch (error) {
-      console.log(error);
+      setErr(error.response?.data.message);
     }
   };
 
@@ -40,9 +42,10 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
       setStep(3);
     } catch (error) {
-      console.log(error);
+      setErr(error.response?.data.message);
     }
   };
 
@@ -60,9 +63,10 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
       navigate("/signin");
     } catch (error) {
-      console.log(error);
+      setErr(error.response?.data.message);
     }
   };
   return (
@@ -93,7 +97,9 @@ const ForgotPassword = () => {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
+            {err && <p className="text-center text-red-500 my-2.5">* {err}</p>}
 
             <button
               onClick={handleSendOtp}
@@ -123,7 +129,9 @@ const ForgotPassword = () => {
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
+              required
             />
+            {err && <p className="text-center text-red-500 my-2.5">* {err}</p>}
 
             <button
               onClick={handleVerifyOtp}
@@ -153,6 +161,7 @@ const ForgotPassword = () => {
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              required
             />
             <label className="block text-gray-700 font-semibold mb-1">
               Confirm New Password
@@ -163,7 +172,10 @@ const ForgotPassword = () => {
               placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              required
             />
+            {err && <p className="text-center text-red-500 my-2.5">* {err}</p>}
+
             <button
               onClick={handleResetPassword}
               disabled={!otp.trim()}
