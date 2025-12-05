@@ -68,8 +68,8 @@ const SignUp = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[#fff5f2]">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200">
-        <h1 className="text-4xl font-extrabold mb-3 text-[#ff4d2d] tracking-tight">
-          Bite-box
+        <h1 className="font-bold text-3xl md:text-4xl text-[#ff4d2d]">
+          Bite<span className="text-black">Box</span>
         </h1>
         <p className="text-gray-500 mb-8 text-sm">
           Create your account and start ordering your favourite meals.
