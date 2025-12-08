@@ -1,57 +1,149 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userSlice";
+import { GiKnifeFork } from "react-icons/gi";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { CiCirclePlus } from "react-icons/ci";
+import { LuReceiptIndianRupee } from "react-icons/lu";
 
 const Nav = () => {
+  const { userData, city } = useSelector((state) => state.user);
+  const [showInfo, setShowInfo] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${serverUrl}/api/auth/signout`, {
+        withCredentials: true,
+      });
+      dispatch(setUserData(null));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[9999] bg-[#fff9f6]">
-      {/* Brand */}
+    <div className="w-full h-[80px] fixed top-0 left-0 z-[9999] bg-[#fff9f6] flex items-center px-5 justify-between shadow-sm">
+      {/* ---------------- MOBILE SEARCH BAR ---------------- */}
+      {showSearch && userData?.role === "user" && (
+        <div className="fixed top-[80px] left-0 w-full h-[70px] bg-white shadow-xl rounded-b-xl flex items-center gap-4 px-4 md:hidden z-[9998]">
+          <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
+            <FaLocationDot size={22} className="text-[#ff4d2d]" />
+            <span className="truncate text-gray-600">{city}</span>
+          </div>
+
+          <div className="flex items-center w-[70%] gap-2">
+            <IoIosSearch size={22} className="text-[#ff4d2d]" />
+            <input
+              type="text"
+              placeholder="search delicious food..."
+              className="w-full outline-none text-gray-700 px-1"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- BRAND ---------------- */}
       <h1 className="font-bold text-3xl md:text-4xl text-[#ff4d2d]">
         Bite<span className="text-black">Box</span>
       </h1>
-      {/* Desktop search box */}
-      <div className="hidden md:flex w-[60%] lg:w-[40%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px]">
-        {/* Location */}
-        <div className="flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r border-gray-300">
-          <FaLocationDot size={22} className="text-[#ff4d2d]" />
-          <div className="truncate text-gray-600">Patna</div>
-        </div>
 
-        {/* Search Input */}
-        <div className="w-[80%] flex items-center gap-[10px]">
-          <IoIosSearch size={22} className="text-[#ff4d2d]" />
-          <input
-            type="text"
-            placeholder="search delicious food..."
-            className="px-[10px] text-gray-700 outline-none w-full"
-          />
-        </div>
-      </div>
+      {/* ---------------- DESKTOP SEARCH BAR ---------------- */}
+      {userData?.role === "user" && (
+        <div className="hidden md:flex items-center w-[45%] h-[60px] bg-white shadow-md rounded-xl px-3 gap-4">
+          <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
+            <FaLocationDot size={22} className="text-[#ff4d2d]" />
+            <span className="truncate text-gray-600">{city}</span>
+          </div>
 
-      {/* Right Buttons */}
+          <div className="flex items-center w-[60%] gap-2">
+            <IoIosSearch size={22} className="text-[#ff4d2d]" />
+            <input
+              type="text"
+              placeholder="search delicious food..."
+              className="w-full outline-none text-gray-700 px-1"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- RIGHT SIDE BUTTONS ---------------- */}
       <div className="flex items-center gap-4">
-        {/* Mobile search icon */}
-        <IoIosSearch
-          size={25}
-          className="text-[#ff4d2d] md:hidden cursor-pointer"
-        />
+        {/* Mobile Search Toggle */}
+        {userData?.role === "user" &&
+          (showSearch ? (
+            <GiKnifeFork
+              size={26}
+              className="text-[#ff4d2d] md:hidden cursor-pointer"
+              onClick={() => setShowSearch(false)}
+            />
+          ) : (
+            <IoIosSearch
+              size={26}
+              className="text-[#ff4d2d] md:hidden cursor-pointer"
+              onClick={() => setShowSearch(true)}
+            />
+          ))}
+
+        {/* Owner Add Food Button */}
+
+        {userData?.role === "owner" && (
+          <>
+            <button className="hidden md:flex items-center gap-1 px-3 py-1 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer text-sm">
+              <CiCirclePlus size={22} />
+              <span>Add Food Item</span>
+            </button>
+            <button className=" md:hidden flex items-center p-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer">
+              <CiCirclePlus size={20} />
+            </button>
+          </>
+        )}
 
         {/* Cart */}
-        <div className="relative cursor-pointer">
-          <FaShoppingCart size={25} className="text-[#ff4d2d]" />
-          <span className="absolute right-[-8px] top-[-10px] text-[#ff4d2d] font-semibold"></span>
-        </div>
+        {userData?.role === "user" && (
+          <div className="relative cursor-pointer">
+            <FaShoppingCart size={22} className="text-[#ff4d2d]" />
+            <span className="absolute right-[-6px] top-[-8px] text-[#ff4d2d] text-xs font-bold">
+              0
+            </span>
+          </div>
+        )}
 
-        {/* My Orders (desktop) */}
+        {/* Desktop Orders */}
         <button className="hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium">
           My Orders
         </button>
 
-        {/* User avatar */}
-        <div className="w-[40px] h-[40px] rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-[18px] shadow-xl font-semibold cursor-pointer">
-          S
+        {/* Avatar */}
+        <div
+          className="w-10 h-10 rounded-full bg-[#ff4d2d] text-white flex items-center justify-center text-lg font-semibold cursor-pointer shadow-md"
+          onClick={() => setShowInfo(!showInfo)}
+        >
+          {userData?.fullName?.[0]}
         </div>
+
+        {/* Dropdown */}
+        {showInfo && (
+          <div className="absolute top-[85px] right-4 w-[180px] bg-white shadow-xl rounded-xl p-4 flex flex-col gap-3 z-[9999]">
+            <span className="font-semibold text-lg">{userData?.fullName}</span>
+
+            <span className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer">
+              My Orders
+            </span>
+
+            <span
+              className="text-[#ff4d2d] font-semibold cursor-pointer"
+              onClick={handleLogout}
+            >
+              Log Out
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
