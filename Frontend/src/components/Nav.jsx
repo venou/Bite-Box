@@ -9,10 +9,9 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { CiCirclePlus } from "react-icons/ci";
 import { LuReceiptIndianRupee } from "react-icons/lu";
-import { setMyShopData } from "../redux/ownerSlice";
 
 const Nav = () => {
-  const { userData, city } = useSelector((state) => state.user);
+  const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -42,7 +41,7 @@ const Nav = () => {
           {/* City Name */}
           <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
             <FaLocationDot size={22} className="text-[#ff4d2d]" />
-            <span className="truncate text-gray-600">{city}</span>
+            <span className="truncate text-gray-600">{currentCity}</span>
           </div>
 
           {/* Search Input */}
@@ -72,7 +71,7 @@ const Nav = () => {
           {/* City Box */}
           <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
             <FaLocationDot size={22} className="text-[#ff4d2d]" />
-            <span className="truncate text-gray-600">{city}</span>
+            <span className="truncate text-gray-600">{currentCity}</span>
           </div>
 
           {/* Search Input */}
