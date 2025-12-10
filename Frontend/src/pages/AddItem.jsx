@@ -41,12 +41,15 @@ function AddItem() {
     try {
       const formData = new FormData();
       formData.append("name", name);
+      formData.append("categeory", categeory);
+      formData.append("foodType", foodType);
+      formData.append("price", price);
 
       if (backEndImage) {
         formData.append("image", backEndImage);
       }
       const result = await axios.post(
-        `${serverUrl}/api/shop/create-edit`,
+        `${serverUrl}/api/item/add-item`,
         formData,
         { withCredentials: true }
       );
