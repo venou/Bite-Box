@@ -8,7 +8,7 @@ const Home = () => {
   const { userData } = useSelector((state) => state.user);
 
   return (
-    <div className="w-screen min-h-screen pt-[100px] flex flex-col items-center bg-[#fff9f6] ">
+    <div className="min-h-[100vh] pt-[100px] flex flex-col items-center bg-[#fff9f6] ">
       {userData?.role === "user" && <UserDashboard />}
       {userData?.role === "owner" && <OwnerDashboard />}
       {userData?.role === "deliveryBoy" && <DeliveryBoy />}
