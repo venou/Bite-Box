@@ -4,46 +4,42 @@ import uploadOnCloudinary from "../utils/cloudinary.js";
 export const createAndEditShop = async (req, res) => {
   try {
     const { name, city, state, address } = req.body;
-
-    // Validation
-    if (!name || !city || !state || !address) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    let imageUrl;
+    let image;
     if (req.file) {
-      imageUrl = await uploadOnCloudinary(req.file.path);
+      image = await uploadOnCloudinary(req.file.path);
     }
 
     let shop = await Shop.findOne({ owner: req.userId });
-
-    const shopData = {
-      name,
-      city,
-      state,
-      address,
-      owner: req.userId,
-    };
-
-    // Add image only if uploaded
-    if (imageUrl) {
-      shopData.image = imageUrl;
-    }
-
     if (!shop) {
-      shop = await Shop.create(shopData);
+      shop = await Shop.create({
+        name,
+        city,
+        state,
+        address,
+        image,
+        owner: req.userId,
+      });
     } else {
-      shop = await Shop.findByIdAndUpdate(shop._id, shopData, { new: true });
+      shop = await Shop.findByIdAndUpdate(
+        shop._id,
+        {
+          name,
+          city,
+          state,
+          address,
+          image,
+          owner: req.userId,
+        },
+        { new: true }
+      );
     }
 
     await shop.populate("owner items");
     return res.status(201).json(shop);
   } catch (error) {
-    console.error("Shop creation error:", error);
-    return res.status(500).json({ message: "Failed to create/update shop" });
+    return res.status(500).json({ message: `create shop error ${error}` });
   }
 };
-
 export const getMyShop = async (req, res) => {
   try {
     const shop = await Shop.findOne({ owner: req.userId })
