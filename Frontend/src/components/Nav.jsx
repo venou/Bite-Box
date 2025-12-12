@@ -9,14 +9,15 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { CiCirclePlus } from "react-icons/ci";
 import { LuReceiptIndianRupee } from "react-icons/lu";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Nav = () => {
+  const Navigate = useNavigate();
   const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
-
   // -------------------------------------------------------------------
   // LOGOUT HANDLER
   // -------------------------------------------------------------------
@@ -116,13 +117,19 @@ const Nav = () => {
             {myShopData && (
               <>
                 {/* Desktop Add Food */}
-                <button className="hidden md:flex items-center gap-1 px-3 py-1 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer text-sm">
+                <button
+                  className="hidden md:flex items-center gap-1 px-3 py-1 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer text-sm"
+                  onClick={() => Navigate("/add-item")}
+                >
                   <CiCirclePlus size={22} />
                   <span>Add Food Item</span>
                 </button>
 
                 {/* Mobile Add Food */}
-                <button className="md:hidden flex items-center p-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer">
+                <button
+                  className="md:hidden flex items-center p-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer"
+                  onClick={() => Navigate("/add-item")}
+                >
                   <CiCirclePlus size={20} />
                 </button>
               </>
