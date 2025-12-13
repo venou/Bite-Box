@@ -2,6 +2,7 @@ import express from "express";
 import {
   createAndEditShop,
   getMyShop,
+  getShopByCity,
 } from "../controllers/shop.controllers.js";
 import { upload } from "../middlewares/multer.js";
 import isAuth from "../middlewares/isAuth.js";
@@ -15,5 +16,6 @@ shopRouter.post(
 );
 
 shopRouter.get("/get-my", isAuth, getMyShop);
+shopRouter.get("/get-by-city/:city", isAuth, getShopByCity);
 
 export default shopRouter;
