@@ -4,7 +4,6 @@ import { categories } from "../categeory";
 import CategeoryCard from "./CategeoryCard";
 import { FaCaretSquareLeft, FaCaretSquareRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { setShopInMyCity } from "../redux/userSlice";
 import FoodCard from "./FoodCard";
 
 const UserDashboard = () => {
@@ -15,7 +14,7 @@ const UserDashboard = () => {
   );
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
-  const [showLefShoptButton, setShowLeftShopButton] = useState(false);
+  const [showLeftShoptButton, setShowLeftShopButton] = useState(false);
   const [showRightShopButton, setShowRightShopButton] = useState(false);
 
   const scrollHandler = (ref, direction) => {
@@ -133,7 +132,7 @@ const UserDashboard = () => {
         </h1>
         <div className="relative">
           {/* LEFT BUTTON */}
-          {showLefShoptButton && (
+          {showLeftShoptButton && (
             <button
               className="absolute left-2 top-1/2 -translate-y-1/2
                          bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg
@@ -162,7 +161,7 @@ const UserDashboard = () => {
               className="absolute right-2 top-1/2 -translate-y-1/2
                          bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg
                          opacity-80 hover:opacity-100 transition z-10"
-              onClick={() => scrollHandler(cateScrollRef, "right")}
+              onClick={() => scrollHandler(shopScrollRef, "right")}
             >
               <FaCaretSquareRight size={22} />
             </button>
@@ -176,9 +175,9 @@ const UserDashboard = () => {
         <h1 className="text-gray-800 text-2xl sm:text-3xl font-semibold mb-4">
           Suggested Food Items
         </h1>
-        <div className="w-full h-auto flex flex-wrap gap=[20px] justify-center">
-          {itemsInMyCity.map((item, index) => (
-            <FoodCard key={index} data={item} />
+        <div className="w-full flex flex-wrap gap-5 justify-center">
+          {itemsInMyCity?.map((items, index) => (
+            <FoodCard key={index} data={items} />
           ))}
         </div>
       </div>
