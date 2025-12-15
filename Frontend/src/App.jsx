@@ -51,6 +51,7 @@ const App = () => {
         path="/edit-item/:itemId"
         element={userData ? <EditItem /> : <Navigate to="/signin" />}
       />
+      {/* <Route path="/cart" /> */}
     </Routes>
   );
 };

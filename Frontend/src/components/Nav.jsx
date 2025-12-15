@@ -13,7 +13,9 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const Navigate = useNavigate();
-  const { userData, currentCity } = useSelector((state) => state.user);
+  const { userData, currentCity, cartItems } = useSelector(
+    (state) => state.user
+  );
   const { myShopData } = useSelector((state) => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -156,10 +158,13 @@ const Nav = () => {
           // ---------------------------------------------------------------
           // CART ICON (Visible for normal users)
           // ---------------------------------------------------------------
-          <div className="relative cursor-pointer">
+          <div
+            className="relative cursor-pointer"
+            onClick={() => Navigate("/cart")}
+          >
             <FaShoppingCart size={22} className="text-[#ff4d2d]" />
             <span className="absolute right-[-6px] top-[-8px] text-[#ff4d2d] text-xs font-bold">
-              0
+              {cartItems.length}
             </span>
           </div>
         )}

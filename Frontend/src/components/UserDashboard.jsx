@@ -171,7 +171,7 @@ const UserDashboard = () => {
 
       {/* Items */}
 
-      <div className="w-full max-w-6xl px-3 sm:px-5 mt-6">
+      <div className="w-full h-auto pb-10 max-w-6xl px-3 sm:px-5 mt-6">
         <h1 className="text-gray-800 text-2xl sm:text-3xl font-semibold mb-4">
           Suggested Food Items
         </h1>
