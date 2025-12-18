@@ -9,7 +9,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { CiCirclePlus } from "react-icons/ci";
 import { LuReceiptIndianRupee } from "react-icons/lu";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const Navigate = useNavigate();
