@@ -8,6 +8,7 @@ const useGetShopByCity = () => {
   const dispatch = useDispatch();
   const { currentCity } = useSelector((state) => state.user);
   useEffect(() => {
+    if (!currentCity) return;
     const fetchShops = async () => {
       try {
         const result = await axios.get(

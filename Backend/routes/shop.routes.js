@@ -16,6 +16,6 @@ shopRouter.post(
 );
 
 shopRouter.get("/get-my", isAuth, getMyShop);
-shopRouter.get("/get-by-city/:city", isAuth, getShopByCity);
+shopRouter.get("/get-by-city/:city",  getShopByCity);
 
 export default shopRouter;

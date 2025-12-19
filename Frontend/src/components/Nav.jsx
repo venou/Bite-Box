@@ -10,9 +10,11 @@ import { serverUrl } from "../App";
 import { CiCirclePlus } from "react-icons/ci";
 import { LuReceiptIndianRupee } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import useGetCity from "../hooks/useGetCity";
 
 const Nav = () => {
   const Navigate = useNavigate();
+  const { detectCity } = useGetCity();
   const { userData, currentCity, cartItems } = useSelector(
     (state) => state.user
   );
@@ -44,7 +46,14 @@ const Nav = () => {
           {/* City Name */}
           <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
             <FaLocationDot size={22} className="text-[#ff4d2d]" />
-            <span className="truncate text-gray-600">{currentCity}</span>
+            <span className="truncate text-gray-600">
+              <button
+                className="truncate text-gray-600 text-left"
+                onClick={detectCity}
+              >
+                {currentCity || "Detect location"}
+              </button>
+            </span>
           </div>
 
           {/* Search Input */}
@@ -74,7 +83,9 @@ const Nav = () => {
           {/* City Box */}
           <div className="flex items-center w-[30%] gap-2 pr-3 border-r border-gray-300">
             <FaLocationDot size={22} className="text-[#ff4d2d]" />
-            <span className="truncate text-gray-600">{currentCity}</span>
+            <span className="truncate text-gray-600">
+              {currentCity || "Detect location"}
+            </span>
           </div>
 
           {/* Search Input */}

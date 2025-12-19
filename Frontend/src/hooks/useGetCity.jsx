@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setCurrentAddress,
   setCurrentCity,
@@ -10,31 +9,52 @@ import { setAddress, setLocation } from "../redux/mapSlice";
 
 const useGetCity = () => {
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.user);
   const apiKey = import.meta.env.VITE_GEOAPIKEY;
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      //  console.log(position)
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      dispatch(setLocation({ lat: latitude, lon: longitude }));
-      const result = await axios.get(
-        `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${apiKey}`
-      );
+  const detectCity = () => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation not supported");
+      return;
+    }
 
-      dispatch(setCurrentCity(result?.data?.results[0].city));
-      dispatch(setCurrentState(result?.data?.results[0].state));
-      // console.log(result?.data?.results[0].state);
-      dispatch(
-        setCurrentAddress(
-          result?.data?.results[0].address_line2 ||
-            result?.data?.results[0].address_line1
-        )
-      );
-      dispatch(setAddress(result?.data?.results[0].address_line2));
-    });
-  }, [userData]);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          dispatch(setLocation({ lat: latitude, lon: longitude }));
+
+          const result = await axios.get(
+            `https://api.geoapify.com/v1/geocode/reverse`,
+            {
+              params: {
+                lat: latitude,
+                lon: longitude,
+                format: "json",
+                apiKey,
+              },
+            }
+          );
+
+          const place = result?.data?.results?.[0];
+          if (!place) return;
+
+          dispatch(setCurrentCity(place.city));
+          dispatch(setCurrentState(place.state));
+          dispatch(
+            setCurrentAddress(place.address_line2 || place.address_line1)
+          );
+          dispatch(setAddress(place.address_line2));
+        } catch (err) {
+          console.error("Reverse geocode failed", err);
+        }
+      },
+      (error) => {
+        console.warn("User denied location", error);
+      }
+    );
+  };
+
+  return { detectCity };
 };
 
 export default useGetCity;

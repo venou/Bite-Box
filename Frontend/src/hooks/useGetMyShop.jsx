@@ -8,6 +8,7 @@ const useGetMyShop = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
   useEffect(() => {
+    if (!userData) return;
     const fetchShop = async () => {
       try {
         const result = await axios.get(`${serverUrl}/api/shop/get-my`, {
