@@ -15,7 +15,7 @@ import useGetShopByCity from "./hooks/useGetShopByCity";
 import useGetItemsByCity from "./hooks/useGetItemsByCity";
 import CartPage from "./pages/CartPage";
 import CheckOut from "./pages/CheckOut";
-export const serverUrl = "https://bite-box-j3qi.onrender.com";
+export const serverUrl = "https://bite-box-backend.onrender.com";
 const App = () => {
   useGetCurrentUser();
   useGetCity();
