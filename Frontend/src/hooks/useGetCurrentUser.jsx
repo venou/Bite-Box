@@ -6,6 +6,7 @@ import { setUserData } from "../redux/userSlice";
 
 const useGetCurrentUser = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -14,7 +15,12 @@ const useGetCurrentUser = () => {
         });
         dispatch(setUserData(result.data));
       } catch (error) {
-        console.log(error);
+        if (error.response?.status === 401) {
+          dispatch(setUserData(null)); // guest user
+          return;
+        }
+
+        console.error("Auth check failed:", error);
       }
     };
 
