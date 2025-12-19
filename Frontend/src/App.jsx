@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import SignUp from "./pages/signup";
+import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
@@ -15,7 +15,7 @@ import useGetShopByCity from "./hooks/useGetShopByCity";
 import useGetItemsByCity from "./hooks/useGetItemsByCity";
 import CartPage from "./pages/CartPage";
 import CheckOut from "./pages/CheckOut";
-export const serverUrl = "http://localhost:8000";
+export const serverUrl = "https://bite-box-j3qi.onrender.com";
 const App = () => {
   useGetCurrentUser();
   useGetCity();
