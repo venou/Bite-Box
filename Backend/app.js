@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://bite-box-khaki.vercel.app/",
     credentials: true,
   })
 );
