@@ -10,12 +10,24 @@ import itemRouter from "./routes/item.route.js";
 dotenv.config();
 const port = process.env.PORT || 5000;
 const app = express();
+const allowedOrigins = [
+  "https://bite-box-khaki.vercel.app",
+  "https://bite-box-git-main-shiva-kumars-projects-0afdc98d.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "https://bite-box-khaki.vercel.app/",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRouter);
